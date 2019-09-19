@@ -81,7 +81,7 @@ class MusicSource:
                 key=lambda song: song.sim ,reverse=True
             )
             for each in ret_songs_list:
-                print(each.sim,each.title,each.singer)         
+                print(each.id,each.source,each.title,each.singer)         
             tmp_list = []
             for i in range(len(ret_songs_list)):
                 # 如果名称、歌手都一致的话就去重，保留最大的文件

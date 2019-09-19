@@ -65,7 +65,7 @@ def kugou_search(keyword) -> list:
         .get("data", {})
         .get("lists", [])
     )
-
+    # print(res_data)
     for item in res_data:
         song = KugouSong()
         song.source = "kugou"
@@ -76,6 +76,9 @@ def kugou_search(keyword) -> list:
         song.album = item.get("AlbumName", "")
         song.size = round(item.get("FileSize", 0) / 1048576, 2)
         song.hash = item.get("FileHash", "")
+        ##付费歌曲忽略
+        if item.get("SQPrice",0) != 0 :
+            continue
         # 如果有更高品质的音乐选择高品质（尽管好像没什么卵用）
         keys_list = ["SQFileHash", "HQFileHash"]
         for key in keys_list:

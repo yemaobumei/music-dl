@@ -69,8 +69,9 @@ def run():
         songs_list = ms.search(config.get("keyword"), config.get("source").split())
         if len(songs_list) > 0:
             songs_list[0].download()
+            click.echo("#####歌曲 %s 下载完毕"%config.get("keyword")) 
         else:
-            click.echo("未找到歌曲%s"%keyword)    
+            click.echo("#####未找到歌曲 %s "%config.get("keyword"))    
         # menu(songs_list)
         # config.set("keyword", click.prompt(_("请输入要搜索的歌曲，或Ctrl+C退出") + "\n >>"))
         # run()
@@ -95,7 +96,7 @@ def run():
     # default="qq netease kugou baidu",
     help=_("支持的数据源: ") + "baidu",
 )
-@click.option("-n", "--number", default=5, help=_("搜索数量限制"))
+@click.option("-n", "--number", default=3, help=_("搜索数量限制"))
 @click.option("-o", "--outdir", default=".", help=_("指定输出目录"))
 @click.option("-x", "--proxy", default="", help=_("指定代理（如http://127.0.0.1:1087）"))
 @click.option("-v", "--verbose", default=False, is_flag=True, help=_("详细模式"))

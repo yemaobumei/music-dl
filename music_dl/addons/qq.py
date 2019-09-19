@@ -124,6 +124,7 @@ def qq_search(keyword) -> list:
     )
 
     for item in res_data:
+        # print(item)
         # 获得歌手名字
         singers = [s.get("name", "") for s in item.get("singer", "")]
         song = QQSong()
@@ -134,6 +135,8 @@ def qq_search(keyword) -> list:
         song.album = item.get("albumname", "")
         song.duration = item.get("interval", 0)
         song.size = round(item.get("size128", 0) / 1048576, 2)
+        if item.get("pay").get("payplay") != 0:
+            continue
         # 特有字段
         song.mid = item.get("songmid", "")
 
