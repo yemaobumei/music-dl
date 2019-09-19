@@ -96,7 +96,7 @@ class BasicSong:
     @property
     def name(self) -> str:
         """ Song file name """
-        return "%s - %s.%s" % (self.singer, self.title, self.ext)
+        return "%s # %s.%s" % (self.singer, self.title, self.ext)
 
     @property
     def duration(self):
@@ -192,7 +192,7 @@ class BasicSong:
         else:
             self._fullname = outfile.rpartition(".")[0]
         # print(self._fullname)    
-        self._fullname=self._fullname.replace(" ","").replace(",","")    
+        self._fullname=self._fullname.replace(" ","").replace(",","_").replace("、","_")   
 
     @property
     def song_fullname(self):
