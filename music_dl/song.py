@@ -191,6 +191,8 @@ class BasicSong:
             )
         else:
             self._fullname = outfile.rpartition(".")[0]
+        # print(self._fullname)    
+        self._fullname=self._fullname.replace(" ","").replace(",","")    
 
     @property
     def song_fullname(self):
