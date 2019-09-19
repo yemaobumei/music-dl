@@ -45,6 +45,7 @@ class BasicSong:
         self.lyrics_text = ""
         # self.lyrics_file = ""
         self._fullname = ""
+        self.sim = 0
         self.logger = logging.getLogger(__name__)
 
     def __repr__(self):

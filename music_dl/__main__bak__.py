@@ -67,21 +67,17 @@ def run():
     ms = MusicSource()
     if config.get("keyword"):
         songs_list = ms.search(config.get("keyword"), config.get("source").split())
-        if len(songs_list) > 0:
-            songs_list[0].download()
-        else:
-            click.echo("未找到歌曲%s"%keyword)    
-        # menu(songs_list)
-        # config.set("keyword", click.prompt(_("请输入要搜索的歌曲，或Ctrl+C退出") + "\n >>"))
-        # run()
-    # elif config.get("playlist"):
-    #     songs_list = ms.playlist(config.get("playlist"))
-    #     menu(songs_list)
-    # elif config.get("url"):
-    #     song = ms.single(config.get("url"))
-    #     song.download()
-    # else:
-    #     return
+        menu(songs_list)
+        config.set("keyword", click.prompt(_("请输入要搜索的歌曲，或Ctrl+C退出") + "\n >>"))
+        run()
+    elif config.get("playlist"):
+        songs_list = ms.playlist(config.get("playlist"))
+        menu(songs_list)
+    elif config.get("url"):
+        song = ms.single(config.get("url"))
+        song.download()
+    else:
+        return
 
 
 @click.command()

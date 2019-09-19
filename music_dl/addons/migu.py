@@ -10,7 +10,7 @@ import copy
 from .. import config
 from ..api import MusicApi
 from ..song import BasicSong
-
+import difflib
 
 class MiguApi(MusicApi):
     session = copy.deepcopy(MusicApi.session)
@@ -25,6 +25,12 @@ class MiguSong(BasicSong):
         self.content_id = ""
 
 def migu_search(keyword) -> list:
+    song_name = ""
+    song_singer = ""
+    try:
+        song_name,song_singer = keyword.split(" ")[:2]
+    except:
+        pass 
     """ 搜索音乐 """
     number = config.get("number") or 5
     params = {
@@ -80,7 +86,9 @@ def migu_search(keyword) -> list:
                 ext = "flac" if rate.get("formatType", "") == "SQ" else "mp3"
                 song.ext = rate.get("fileType", ext)
                 break
-
+        ##歌名，歌手相似度
+        song.sim += difflib.SequenceMatcher(None, song_name, song.title).quick_ratio()
+        song.sim += difflib.SequenceMatcher(None, song_singer, song.singer).quick_ratio()
         songs_list.append(song)
 
     return songs_list

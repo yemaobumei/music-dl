@@ -74,9 +74,14 @@ class MusicSource:
 
         # 对搜索结果排序和去重
         if not config.get("nomerge"):
+            # ret_songs_list.sort(
+            #     key=lambda song: (song.singer, song.title, song.size), reverse=True
+            # )
             ret_songs_list.sort(
-                key=lambda song: (song.singer, song.title, song.size), reverse=True
+                key=lambda song: song.sim ,reverse=True
             )
+            for each in ret_songs_list:
+                print(each.sim,each.title,each.singer)         
             tmp_list = []
             for i in range(len(ret_songs_list)):
                 # 如果名称、歌手都一致的话就去重，保留最大的文件

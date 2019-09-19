@@ -17,7 +17,7 @@ from .. import config
 from ..api import MusicApi
 from ..exceptions import RequestError, ResponseError, DataError
 from ..song import BasicSong
-
+import difflib
 __all__ = ["search", "playlist"]
 
 
@@ -110,6 +110,12 @@ class NeteaseSong(BasicSong):
 
 
 def netease_search(keyword) -> list:
+    song_name = ""
+    song_singer = ""
+    try:
+        song_name,song_singer = keyword.split(" ")[:2]
+    except:
+        pass 
     """ Search song from netease music """
     number = config.get("number") or 5
     eparams = {
@@ -154,6 +160,9 @@ def netease_search(keyword) -> list:
             song.duration = int(item.get("dt", 0) / 1000)
             song.size = round(size / 1048576, 2)
             song.cover_url = item.get("al", {}).get("picUrl", "")
+            ##歌名，歌手相似度
+            song.sim += difflib.SequenceMatcher(None, song_name, song.title).quick_ratio()
+            song.sim += difflib.SequenceMatcher(None, song_singer, song.singer).quick_ratio()            
             songs_list.append(song)
     except Exception as e:
         raise DataError(e)

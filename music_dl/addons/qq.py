@@ -12,7 +12,7 @@ import copy
 from .. import config
 from ..api import MusicApi
 from ..song import BasicSong
-
+import difflib
 
 class QQApi(MusicApi):
     session = copy.deepcopy(MusicApi.session)
@@ -98,6 +98,12 @@ class QQSong(BasicSong):
 
 
 def qq_search(keyword) -> list:
+    song_name = ""
+    song_singer = ""
+    try:
+        song_name,song_singer = keyword.split(" ")[:2]
+    except:
+        pass 
     """ 搜索音乐 """
     number = config.get("number") or 5
     params = {"w": keyword, "format": "json", "p": 1, "n": number}
@@ -131,6 +137,9 @@ def qq_search(keyword) -> list:
         # 特有字段
         song.mid = item.get("songmid", "")
 
+        ##歌名，歌手相似度
+        song.sim += difflib.SequenceMatcher(None, song_name, song.title).quick_ratio()
+        song.sim += difflib.SequenceMatcher(None, song_singer, song.singer).quick_ratio() 
         songs_list.append(song)
 
     return songs_list

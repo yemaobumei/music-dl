@@ -14,7 +14,7 @@ from .. import config
 from ..api import MusicApi
 from ..song import BasicSong
 from ..exceptions import DataError
-
+import difflib
 __all__ = ["search"]
 
 
@@ -41,6 +41,12 @@ class XiamiSong(BasicSong):
 
 
 def xiami_search(keyword) -> list:
+    song_name = ""
+    song_singer = ""
+    try:
+        song_name,song_singer = keyword.split(" ")[:2]
+    except:
+        pass 
     """ search music from xiami """
     params = XiamiApi.encrypted_params(keyword=keyword)
     print(params)
@@ -75,7 +81,9 @@ def xiami_search(keyword) -> list:
         song.duration = int(listen_files[0].get("length", 0) / 1000)
         song.ext = listen_files[0].get("format", "mp3")
         song.rate = re.findall("https?://s(\d+)", song.song_url)[0]
-
+        ##歌名，歌手相似度
+        song.sim += difflib.SequenceMatcher(None, song_name, song.title).quick_ratio()
+        song.sim += difflib.SequenceMatcher(None, song_singer, song.singer).quick_ratio() 
         songs_list.append(song)
 
     return songs_list

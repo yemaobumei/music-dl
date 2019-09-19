@@ -10,7 +10,7 @@ import copy
 from .. import config
 from ..api import MusicApi
 from ..song import BasicSong
-
+import difflib
 
 class BaiduSong(BasicSong):
     def __init__(self):
@@ -23,6 +23,12 @@ class BaiduApi(MusicApi):
 
 
 def baidu_search(keyword) -> list:
+    song_name = ""
+    song_singer = ""
+    try:
+        song_name,song_singer = keyword.split(" ")[:2]
+    except:
+        pass
     """ 搜索音乐 """
     number = config.get("number") or 5
     params = dict(
@@ -32,7 +38,6 @@ def baidu_search(keyword) -> list:
         page_no=1,
         page_size=number,
     )
-
     songs_list = []
     res_data = BaiduApi.request(
         "http://musicapi.qianqian.com/v1/restserver/ting", method="GET", data=params
@@ -66,6 +71,9 @@ def baidu_search(keyword) -> list:
         song.rate = bitrate.get("file_bitrate", 128)
         song.ext = bitrate.get("file_extension", "mp3")
         song.cover_url = res_song_data.get("songinfo", {}).get("pic_radio", "")
+        ##歌名，歌手相似度
+        song.sim += difflib.SequenceMatcher(None, song_name, item.get("title","")).quick_ratio()
+        song.sim += difflib.SequenceMatcher(None, song_singer, item.get("author","")).quick_ratio()
         songs_list.append(song)
 
     return songs_list
